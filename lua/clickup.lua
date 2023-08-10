@@ -1,9 +1,11 @@
 local default_config = require("clickup.config")
+local client = require("clickup.client")
 ---@class ClickUp
 ---@field config Config
 ---@field client ClickUpClient
 local M = {
   config = default_config,
+  client = client,
 }
 
 --- Display the tasks in a buffer
@@ -53,7 +55,6 @@ end
 ---@param args Config?
 M.setup = function(args)
   M.config = vim.tbl_deep_extend("force", M.config, args or {})
-  M.client = require("clickup.client")
 end
 
 return M
