@@ -7,7 +7,7 @@ local M = {
   client = client,
 }
 
-local opts = {}
+local opts
 
 --- Display the tasks in a buffer
 M.display_tasks = function()
@@ -56,8 +56,10 @@ end
 ---Setup the plugin
 ---@param args Options?
 M.setup = function(args)
+  vim.notify(vim.inspect(args))
   config.set_options(args or {})
   opts = require("clickup.config").options
+  vim.notify(vim.inspect(opts))
 end
 
 return M
