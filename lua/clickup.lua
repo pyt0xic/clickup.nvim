@@ -1,17 +1,20 @@
-local config = require("clickup.config")
 local client = require("clickup.client")
 ---@class ClickUp
----@field config Config
 ---@field client ClickUpClient
+---@field options Options
 local M = {
   client = client,
+  options = {},
 }
 
-local opts
-
 --- Display the tasks in a buffer
-M.display_tasks = function()
+function M.display_tasks()
+  local opts = require("clickup.config").options
   vim.notify(vim.inspect(opts))
+  vim.notify(vim.inspect(M.options))
+  if opts == {} then
+    opts = M.options
+  end
   local GetTasksRequest = {
     pathParams = {
       list_id = opts.list_id,
@@ -56,10 +59,11 @@ end
 ---Setup the plugin
 ---@param args Options?
 M.setup = function(args)
+  local config = require("clickup.config")
+  config.setup(args or {})
   vim.notify(vim.inspect(args))
-  config.set_options(args or {})
-  opts = require("clickup.config").options
-  vim.notify(vim.inspect(opts))
+  vim.notify(vim.inspect(config.options))
+  M.options = config.options
 end
 
 return M
