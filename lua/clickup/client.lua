@@ -23,6 +23,7 @@ function M.get_tasks(api_token, params)
       url = url .. "?" .. query_string
     end
   end
+  vim.notify(url)
   -- make request
   local response, err = curl.get(url, {
     accept = "application/json",
