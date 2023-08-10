@@ -54,7 +54,13 @@ end
 ---Setup the plugin
 ---@param args Config?
 M.setup = function(args)
+  -- Write args as a string for debugging
+  local args_str = vim.inspect(args)
+  vim.notify(args_str)
   M.config = vim.tbl_deep_extend("force", M.config, args or {})
+  -- Write the config as a string for debugging
+  local config_str = vim.inspect(M.config)
+  vim.notify(config_str)
 end
 
 return M
