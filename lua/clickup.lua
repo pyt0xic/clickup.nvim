@@ -57,6 +57,7 @@ end
 ---@param args Options?
 M.setup = function(args)
   config.set_options(args or {})
+  opts = require("clickup.config").options
 end
 
 return M
