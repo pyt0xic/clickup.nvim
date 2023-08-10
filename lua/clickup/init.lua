@@ -8,3 +8,4 @@ M.display_tasks = tasks.display_tasks
 M.setup = config.setup
 
 return M
+
