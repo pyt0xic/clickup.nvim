@@ -15,7 +15,6 @@ clickup.client = require("clickup.client")
 clickup.setup = function(args)
   clickup.config = vim.tbl_deep_extend("force", clickup.config, args or {})
   clickup.client = require("clickup.client")
-  clickup.reg_display_tasks()
 end
 
 return clickup
