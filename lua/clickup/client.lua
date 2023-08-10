@@ -1,5 +1,5 @@
 local curl = require("plenary.curl")
-local url_encode = vim.fn.escape
+local url_encode = require("clickup.util").urlencode
 
 --- @class ClickUpClient
 local M = {}
