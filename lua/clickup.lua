@@ -1,7 +1,10 @@
+local default_config = require("clickup.config")
 ---@class ClickUp
 ---@field config Config
 ---@field client ClickUpClient
-local M = {}
+local M = {
+  config = default_config,
+}
 
 --- Display the tasks in a buffer
 M.display_tasks = function()
@@ -45,16 +48,6 @@ M.display_tasks = function()
 
   vim.api.nvim_buf_set_keymap(bufnr, "n", "q", ":q<CR>", { noremap = true, silent = true })
 end
-
----@type Config
-local config = {
-  api_token = "",
-  list_id = 0,
-}
-
-M.config = config
-
-M.client = require("clickup.client")
 
 ---Setup the plugin
 ---@param args Config?

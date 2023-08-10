@@ -1,8 +1,8 @@
 ---@class Config
 ---@field api_token string
----@field list_id number
+---@field list_id string
 local M = {
   api_token = "",
-  list_id = 0,
+  list_id = "",
 }
 return M
