@@ -1,26 +1,24 @@
-local client = require("clickup.client")
 local config = require("clickup.config")
 ---@class ClickUp
 ---@field client ClickUpClient
 ---@field options Options
 local M = {
-  client = client,
+  client = require("clickup.client"),
   options = config.defaults,
 }
 
-local opts
-
 --- Display the tasks in a buffer
 function M.display_tasks()
-  vim.notify(vim.inspect(opts))
+  vim.notify(vim.inspect(config.options))
   vim.notify(vim.inspect(M.options))
-  if opts == nil and M.options == config.defaults then
-    error "ClickUp options not set"
-  elseif opts == nil then
-    opts = M.options
-  else
-    M.options = opts
-  end
+  local opts = config.options
+  -- if opts == nil and M.options == config.defaults then
+  --   error "ClickUp options not set"
+  -- elseif opts == nil then
+  --   opts = M.options
+  -- else
+  --   M.options = opts
+  -- end
   local GetTasksRequest = {
     pathParams = {
       list_id = opts.list_id,
@@ -63,13 +61,12 @@ function M.display_tasks()
 end
 
 ---Setup the plugin
----@param args Options?
-M.setup = function(args)
-  config.setup(args or {})
-  opts = config.options
-  vim.notify(vim.inspect(args))
-  vim.notify(vim.inspect(opts))
-  M.options = opts
+---@param opts Options?
+M.setup = function(opts)
+  config.setup(opts or {})
+  M.options = config.options
+  vim.notify("opts " .. vim.inspect(opts))
+  vim.notify("M.options " .. vim.inspect(M.options))
 end
 
 return M

@@ -25,7 +25,7 @@ end
 ---@param opts Options?
 ---@return Options
 function M.merge(opts)
-  return vim.tbl_extend("force", M.options, opts or {})
+  return vim.tbl_extend("force", M.options, opts)
 end
 
 return M
