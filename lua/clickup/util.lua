@@ -31,3 +31,5 @@ function M.urlencode(url)
   url = url:gsub(" ", "+")
   return url
 end
+
+return M
