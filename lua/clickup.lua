@@ -11,6 +11,7 @@ local opts = {}
 
 --- Display the tasks in a buffer
 M.display_tasks = function()
+  vim.notify(vim.inspect(opts))
   local GetTasksRequest = {
     pathParams = {
       list_id = opts.list_id,
