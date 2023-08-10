@@ -1,18 +1,19 @@
-local default_config = require("clickup.config")
+local config = require("clickup.config")
 local client = require("clickup.client")
 ---@class ClickUp
 ---@field config Config
 ---@field client ClickUpClient
 local M = {
-  config = default_config,
   client = client,
 }
+
+local opts = {}
 
 --- Display the tasks in a buffer
 M.display_tasks = function()
   local GetTasksRequest = {
     pathParams = {
-      list_id = M.config.list_id,
+      list_id = opts.list_id,
     },
     queryParams = {
       subtasks = "true",
@@ -20,7 +21,7 @@ M.display_tasks = function()
     },
   }
 
-  local tickets = M.client.get_tasks(M.config.api_token, GetTasksRequest).tasks
+  local tickets = M.client.get_tasks(opts.api_token, GetTasksRequest).tasks
   local tasks_display = ""
 
   for _, ticket in ipairs(tickets) do
@@ -52,15 +53,9 @@ M.display_tasks = function()
 end
 
 ---Setup the plugin
----@param args Config?
+---@param args Options?
 M.setup = function(args)
-  -- Write args as a string for debugging
-  local args_str = vim.inspect(args)
-  vim.notify(args_str)
-  M.config = vim.tbl_deep_extend("force", M.config, args or {})
-  -- Write the config as a string for debugging
-  local config_str = vim.inspect(M.config)
-  vim.notify(config_str)
+  config.set_options(args or {})
 end
 
 return M
