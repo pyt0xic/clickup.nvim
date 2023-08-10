@@ -1,5 +1,5 @@
 local curl = require("plenary.curl")
-local url_encode = require("clickup.util").urlencode
+local util = require("clickup.util")
 
 --- @class ClickUpClient
 local M = {}
@@ -16,7 +16,7 @@ function M.get_tasks(api_token, params)
   if query_params then
     local query_parts = {}
     for key, value in pairs(query_params) do
-      table.insert(query_parts, key .. "=" .. url_encode(value))
+      table.insert(query_parts, key .. "=" .. value)
     end
     local query_string = table.concat(query_parts, "&")
     if query_string ~= "" then
@@ -24,7 +24,7 @@ function M.get_tasks(api_token, params)
     end
   end
   -- make request
-  local response, err = curl.get(url, {
+  local response, err = curl.get(util.urlencode(url), {
     accept = "application/json",
     raw = { "-H", "Authorization: " .. api_token },
     timeout = 30000,
@@ -50,11 +50,11 @@ function M.start_time_entry(api_token, params)
   if query_params and query_params.custom_task_ids and query_params.team_id then
     local custom_task_ids = query_params.custom_task_ids
     local team_id_query = query_params.team_id
-    url = url .. "?custom_task_ids=" .. url_encode(custom_task_ids) .. "&team_id=" .. url_encode(team_id_query)
+    url = url .. "?custom_task_ids=" .. custom_task_ids .. "&team_id=" .. team_id_query
   end
   local request_body = vim.fn.json_encode(params.body)
   -- make request
-  local response, err = curl.post(url, {
+  local response, err = curl.post(util.urlencode(url), {
     accept = "application/json",
     data = request_body,
     raw = { "-H", "Authorization: " .. api_token },
@@ -77,7 +77,7 @@ function M.stop_time_entry(api_token, team_id)
   local base_url = "https://api.clickup.com/api/v2/team/"
   local url = base_url .. team_id .. "/time_entries/stop"
   -- make request
-  local response, err = curl.post(url, {
+  local response, err = curl.post(util.urlencode(url), {
     accept = "application/json",
     raw = { "-H", "Authorization: " .. api_token },
     timeout = 30000,
@@ -103,11 +103,11 @@ function M.create_time_entry(api_token, params)
   if query_params and query_params.custom_task_ids and query_params.team_id then
     local custom_task_ids = query_params.custom_task_ids
     local team_id_query = query_params.team_id
-    url = url .. "?custom_task_ids=" .. url_encode(custom_task_ids) .. "&team_id=" .. url_encode(team_id_query)
+    url = url .. "?custom_task_ids=" .. custom_task_ids .. "&team_id=" .. team_id_query
   end
   local request_body = vim.fn.json_encode(params.body)
   -- make request
-  local response, err = curl.post(url, {
+  local response, err = curl.post(util.urlencode(url), {
     accept = "application/json",
     data = request_body,
     raw = { "-H", "Authorization: " .. api_token },
@@ -132,7 +132,7 @@ function M.delete_time_entry(api_token, team_id, timer_ids)
   local url = base_url .. team_id .. "/time_entries"
   local timer_ids_string = table.concat(timer_ids, ",")
   -- make request
-  local response, err = curl.delete(url, {
+  local response, err = curl.delete(util.urlencode(url), {
     accept = "application/json",
     raw = { "-H", "Authorization: " .. api_token },
     data = { timer_ids = timer_ids_string },
@@ -160,11 +160,11 @@ function M.update_time_entry(api_token, params)
   if query_params and query_params.custom_task_ids and query_params.team_id then
     local custom_task_ids = query_params.custom_task_ids
     local team_id_query = query_params.team_id
-    url = url .. "?custom_task_ids=" .. url_encode(custom_task_ids) .. "&team_id=" .. url_encode(team_id_query)
+    url = url .. "?custom_task_ids=" .. custom_task_ids .. "&team_id=" .. team_id_query
   end
   local request_body = params.body
   -- make request
-  local response, err = curl.put(url, {
+  local response, err = curl.put(util.urlencode(url), {
     accept = "application/json",
     data = vim.fn.json_encode(request_body),
     raw = { "-H", "Authorization: " .. api_token },
@@ -192,7 +192,7 @@ function M.get_time_entries(api_token, params)
     local query_parts = {}
     for key, value in pairs(query_params) do
       if value ~= nil then
-        table.insert(query_parts, key .. "=" .. url_encode(value))
+        table.insert(query_parts, key .. "=" .. value)
       end
     end
     local query_string = table.concat(query_parts, "&")
@@ -201,7 +201,7 @@ function M.get_time_entries(api_token, params)
     end
   end
   -- make request
-  local response, err = curl.get(url, {
+  local response, err = curl.get(util.urlencode(url), {
     accept = "application/json",
     raw = { "-H", "Authorization: " .. api_token },
     timeout = 30000,
@@ -226,9 +226,9 @@ function M.get_running_time_entry(api_token, team_id, assignee)
     return nil, "Assignee is required"
   end
   local url = base_url .. team_id .. "/time_entries/current"
-  url = url .. "?assignee=" .. url_encode(assignee)
+  url = url .. "?assignee=" .. assignee
   -- make request
-  local response, err = curl.get(url, {
+  local response, err = curl.get(util.urlencode(url), {
     accept = "application/json",
     raw = { "-H", "Authorization: " .. api_token },
     timeout = 30000,
@@ -254,7 +254,7 @@ function M.create_task(api_token, list_id, params)
   if query_params then
     local query_parts = {}
     for key, value in pairs(query_params) do
-      table.insert(query_parts, key .. "=" .. url_encode(value))
+      table.insert(query_parts, key .. "=" .. value)
     end
     local query_string = table.concat(query_parts, "&")
     if query_string ~= "" then
@@ -263,7 +263,7 @@ function M.create_task(api_token, list_id, params)
   end
   local request_body = vim.fn.json_encode(params.body)
   -- make request
-  local response, err = curl.post(url, {
+  local response, err = curl.post(util.urlencode(url), {
     accept = "application/json",
     data = request_body,
     raw = { "-H", "Authorization: " .. api_token },
@@ -290,7 +290,7 @@ function M.update_task(api_token, task_id, params)
   if query_params then
     local query_parts = {}
     for key, value in pairs(query_params) do
-      table.insert(query_parts, key .. "=" .. url_encode(value))
+      table.insert(query_parts, key .. "=" .. value)
     end
     local query_string = table.concat(query_parts, "&")
     if query_string ~= "" then
@@ -299,7 +299,7 @@ function M.update_task(api_token, task_id, params)
   end
   local request_body = vim.fn.json_encode(params.body)
   -- make request
-  local response, err = curl.put(url, {
+  local response, err = curl.put(util.urlencode(url), {
     accept = "application/json",
     data = request_body,
     raw = { "-H", "Authorization: " .. api_token },
@@ -326,7 +326,7 @@ function M.delete_task(api_token, task_id, params)
   if query_params then
     local query_parts = {}
     for key, value in pairs(query_params) do
-      table.insert(query_parts, key .. "=" .. url_encode(value))
+      table.insert(query_parts, key .. "=" .. value)
     end
     local query_string = table.concat(query_parts, "&")
     if query_string ~= "" then
@@ -334,7 +334,7 @@ function M.delete_task(api_token, task_id, params)
     end
   end
   -- make request
-  local response, err = curl.delete(url, {
+  local response, err = curl.delete(util.urlencode(url), {
     accept = "application/json",
     raw = { "-H", "Authorization: " .. api_token },
     timeout = 30000,
@@ -360,7 +360,7 @@ function M.get_task_comments(api_token, task_id, params)
   if query_params then
     local query_parts = {}
     for key, value in pairs(query_params) do
-      table.insert(query_parts, key .. "=" .. url_encode(value))
+      table.insert(query_parts, key .. "=" .. value)
     end
     local query_string = table.concat(query_parts, "&")
     if query_string ~= "" then
@@ -368,7 +368,7 @@ function M.get_task_comments(api_token, task_id, params)
     end
   end
   -- make request
-  local response, err = curl.get(url, {
+  local response, err = curl.get(util.urlencode(url), {
     accept = "application/json",
     raw = { "-H", "Authorization: " .. api_token },
     timeout = 30000,
@@ -394,7 +394,7 @@ function M.create_task_comment(api_token, task_id, params)
   if query_params then
     local query_parts = {}
     for key, value in pairs(query_params) do
-      table.insert(query_parts, key .. "=" .. url_encode(value))
+      table.insert(query_parts, key .. "=" .. value)
     end
     local query_string = table.concat(query_parts, "&")
     if query_string ~= "" then
@@ -403,7 +403,7 @@ function M.create_task_comment(api_token, task_id, params)
   end
   local request_body = vim.fn.json_encode(params.body)
   -- make request
-  local response, err = curl.post(url, {
+  local response, err = curl.post(util.urlencode(url), {
     accept = "application/json",
     data = request_body,
     raw = { "-H", "Authorization: " .. api_token },
@@ -428,7 +428,7 @@ function M.update_comment(api_token, comment_id, params)
   local url = base_url .. comment_id
   local request_body = vim.fn.json_encode(params.body)
   -- make request
-  local response, err = curl.put(url, {
+  local response, err = curl.put(util.urlencode(url), {
     accept = "application/json",
     data = request_body,
     raw = { "-H", "Authorization: " .. api_token },
@@ -451,7 +451,7 @@ function M.delete_comment(api_token, comment_id)
   local base_url = "https://api.clickup.com/api/v2/comment/"
   local url = base_url .. comment_id
   -- make request
-  local response, err = curl.delete(url, {
+  local response, err = curl.delete(util.urlencode(url), {
     accept = "application/json",
     raw = { "-H", "Authorization: " .. api_token },
     timeout = 30000,
