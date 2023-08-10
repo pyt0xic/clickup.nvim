@@ -10,8 +10,8 @@ M.display_tasks = function()
       list_id = M.config.list_id,
     },
     queryParams = {
-      subtasks = true,
-      include_closed = false,
+      subtasks = "true",
+      include_closed = "false",
     },
   }
 
