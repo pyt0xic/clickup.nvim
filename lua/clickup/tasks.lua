@@ -1,4 +1,5 @@
 local config = require("clickup.config")
+local client = require("clickup.client")
 
 local M = {}
 
@@ -22,7 +23,7 @@ function M.display_tasks()
     },
   }
 
-  local tickets = M.client.get_tasks(config.options.api_token, GetTasksRequest).tasks
+  local tickets = client.get_tasks(config.options.api_token, GetTasksRequest).tasks
   local tasks_display = ""
 
   for _, ticket in ipairs(tickets) do
